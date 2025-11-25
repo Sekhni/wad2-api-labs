@@ -1,5 +1,6 @@
 import express from 'express';
 import Task from './taskModel';
+import asyncHandler from 'express-async-handler';
 
 const router = express.Router(); // eslint-disable-line
 
@@ -21,6 +22,11 @@ router.put('/:id', async (req, res) => {
         res.status(404).json({ code: 404, msg: 'Unable to find Task' });
     }
 });
+
+router.post('/', asyncHandler(async (req, res) => {
+    const task = await Task(req.body).save();
+    res.status(201).json(task);
+}));
 
 // delete Task
 router.delete('/:id', async (req, res) => {
